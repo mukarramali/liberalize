@@ -1,0 +1,57 @@
+#!/bin/bash
+
+echo "===== Git Commit Message ====="
+
+PS3='Choose a tag : '
+tags=("UPGRADE" "REFACTOR" "FIX" "PRETTIFY" "FEATURE" "MAINTENANCE" "HOTFIX" "CLEANUP" "TEST")
+
+commitTag=""
+
+select tag in "${tags[@]}"
+do
+    case $tag in
+        "UPGRADE" )
+            echo $tag;
+            commitTag="UPGRADE";
+            break;;
+        "REFACTOR" )
+            commitTag="REFACTOR";
+            break;;
+        "FIX" )
+            commitTag="FIX";
+            break;;
+        "PRETTIFY" )
+            commitTag="PRETTIFY";
+            break;;
+        "FEATURE" )
+            commitTag="FEATURE";
+            break;;
+        "MAINTENANCE" )
+            commitTag="MAINTENANCE";
+            break;;
+        "HOTFIX" )
+            commitTag="HOTFIX";
+            break;;
+        "CLEANUP" )
+	    commitTag="CLEANUP";
+            break;;
+        "TEST" )
+            commitTag="TEST";
+            break;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+
+read -p "Enter title: "  commitTitle
+read -p "Enter JIRA card [Ex WA-147, default none]: "  jiraTicket
+read -p "Enter commit message [No line breaks]: "  commitBody
+
+if [[ $jiraTicket != "" ]]; then
+  jiraTicket="\n\nhttps://[organisation].atlassian.net/browse/$jiraTicket"
+fi
+
+commitMessage="$(printf "[$commitTag] $commitTitle
+$jiraTicket
+$commitBody")"
+
+git commit -m "$commitMessage"
